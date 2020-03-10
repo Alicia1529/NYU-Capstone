@@ -3,11 +3,11 @@ import scipy.special as sp
 
 print("""
 Associated Legendre Function
-----------------
+----------------------------
 nmax          : 14
 Theta (deg)   : 1.850000000e+01
 cTheta        : 9.483236552e-01
-----------------""")
+----------------------------""")
 print("    n                Pnm               Pinm              Taunm")
 
 nmax = 14
@@ -18,7 +18,9 @@ ctheta = np.cos(theta)
 # print(ctheta)
 
 pmn_pos, dpmn_pos = sp.lpmn(nmax, nmax, ctheta)
+dpmn_pos = np.multiply(dpmn_pos, -np.sin(theta))
 pmn_neg, dpmn_neg = sp.lpmn(-nmax, nmax, ctheta)
+dpmn_neg = np.multiply(dpmn_neg, -np.sin(theta))
 if theta % np.pi != 0:
     for n in range(nmax+1):
         for m in range(n, -n-1, -1):
@@ -29,7 +31,6 @@ if theta % np.pi != 0:
                 pmn = pmn_neg[-m][n]
                 taumn = dpmn_neg[-m][n]
             pimn = m*pmn/np.sin(theta)
-            taumn = -taumn if taumn != 0 else taumn
             print("{:>5}{:>5}{:>19.9e}{:>19.9e}{:>19.9e}"
                 .format(n, m, pmn, pimn, taumn)
                 )

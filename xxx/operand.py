@@ -14,85 +14,75 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import sys, os
+path2add = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, 'compat')))
+
+if (not (path2add in sys.path)) :
+    sys.path.append(path2add)
+
 import weakref
+from numpy import isscalar
+import time
 
-from ..compat import six
-from ..serialize import SerializableMetaclass, AttributeAsDictKey, ValueType, ProviderType, \
-    IdentityField, ListField, DataTypeField, Int32Field, BoolField, DictField
-from ..core import Entity
-from ..utils import AttributeDict
+# Data state: (waiting ->) ready
 
 
-operand_type_to_oprand_cls = {}
-OP_TYPE_KEY = '_op_type_'
-OP_MODULE_KEY = '_op_module_'
+class Data(object):
+    # check data ?
+    def __init__(self, data):
+        self._data = data
 
+    @property
+    def data(self):
+        return self._data
 
-class OperandMetaclass(SerializableMetaclass):
-    def __new__(mcs, name, bases, kv):
-        cls = super(OperandMetaclass, mcs).__new__(mcs, name, bases, kv)
+    @data.setter
+    def data(self, new_data):
+        self._data = new_data
 
-        for base in bases:
-            if OP_TYPE_KEY not in kv and hasattr(base, OP_TYPE_KEY):
-                kv[OP_TYPE_KEY] = getattr(base, OP_TYPE_KEY)
-            if OP_MODULE_KEY not in kv and hasattr(base, OP_MODULE_KEY):
-                kv[OP_MODULE_KEY] = getattr(base, OP_MODULE_KEY)
+    def isNumerical(self):
+        return isscalar(self._data)
 
-        if kv.get(OP_TYPE_KEY) is not None and kv.get(OP_MODULE_KEY) is not None:
-            # common operand can be inherited for different modules, like tensor or dataframe, so forth
-            operand_type_to_oprand_cls[kv[OP_MODULE_KEY], kv[OP_TYPE_KEY]] = cls
+    def __copy__(self):
+        return self.copy()
 
-        return cls
+    def copy(self):
+        self.copy_to(type(self)(None))
 
+    def copy_to(self, target):
+        target.data = self._data
 
-class Operand(six.with_metaclass(OperandMetaclass, AttributeAsDictKey)):
+    # def copy_from(self, obj):
+    #     self.data = obj.data
+
+class Field:
+    pass
+
+# operand state: waiting -> unscheduled -> ready -> running -> finished
+
+class Operand:
     """
     Operand base class. All operands should have a type, which can be Add, Subtract etc.
-    `sparse` indicates that if the operand is applied on a sparse tensor/chunk.
-    `gpu` indicates that if the operand should be executed on the GPU.
-    `device`, 0 means the CPU, otherwise means the GPU device.
     Operand can have inputs and outputs
     which should be the :class:`mars.tensor.core.TensorData`, :class:`mars.tensor.core.ChunkData` etc.
     """
 
-    attr_tag = 'attr'
-    _init_update_key_ = False
+    def __init__(self, op_name):
+        self._op_id = self.hash_op_id(op_name)
+        self._op_name = op_name
+        self._inputs = dict()
+        self._outputs = dict()
+    
+    def hash_op_id(self, op_name):
+        return str(hash(op_name)) + "." + str(int(time.time()))
 
-    _op_id = IdentityField('type')
-
-    _sparse = BoolField('sparse')
-
-    _dtype = DataTypeField('dtype')
-
-    _inputs = ListField('inputs', ValueType.key)
-    _outputs = ListField('outputs', ValueType.key, weak_ref=True)
-
-    _params = DictField('params', key_type=ValueType.string, on_deserialize=AttributeDict)
-
-    def __new__(cls, *args, **kwargs):
-        if '_op_id' in kwargs and kwargs['_op_id']:
-            op_id = kwargs['_op_id']
-            module, tp = op_id.split('.', 1)
-            cls = operand_type_to_oprand_cls[module, int(tp)]
-        return object.__new__(cls)
-
-    def __init__(self, *args, **kwargs):
-        extras = AttributeDict((k, kwargs.pop(k)) for k in set(kwargs) - set(self.__slots__))
-        kwargs['_params'] = kwargs.pop('_params', extras)
-        super(Operand, self).__init__(*args, **kwargs)
-        if hasattr(self, OP_MODULE_KEY) and hasattr(self, OP_TYPE_KEY):
-            self._op_id = '{0}.{1}'.format(getattr(self, OP_MODULE_KEY), getattr(self, OP_TYPE_KEY))
-
-    @classmethod
-    def cls(cls, provider):
-        if provider.type == ProviderType.protobuf:
-            from ..serialize.protos.operand_pb2 import OperandDef
-            return OperandDef
-        return super(Operand, cls).cls(provider)
+    @property
+    def key(self):
+        return self._op_id
 
     @property
     def inputs(self):
-        return getattr(self, '_inputs', None)
+        return self._inputs
 
     @inputs.setter
     def inputs(self, vals):
@@ -100,60 +90,14 @@ class Operand(six.with_metaclass(OperandMetaclass, AttributeAsDictKey)):
 
     @property
     def outputs(self):
-        outputs = getattr(self, '_outputs', None)
-        if outputs:
-            return [ref() for ref in outputs]
+        return self._outputs
 
     @outputs.setter
     def outputs(self, outputs):
-        self._attach_outputs(*outputs)
-
-    @property
-    def output_limit(self):
-        return 1
-
-    @property
-    def dtype(self):
-        return getattr(self, '_dtype', None)
-
-    @property
-    def device(self):
-        return getattr(self, '_device', None)
-
-    @property
-    def params(self):
-        return self._params
-
-    @params.setter
-    def params(self, params):
-        self._params = params
-
-    @classmethod
-    def _get_entity_data(cls, entity):
-        if isinstance(entity, Entity):
-            return entity.data
-        return entity
-
-    @classmethod
-    def _get_inputs_data(cls, inputs):
-        return [cls._get_entity_data(inp) for inp in inputs]
+        self._set_outputs(outputs)
 
     def _set_inputs(self, inputs):
-        if inputs is not None:
-            inputs = self._get_inputs_data(inputs)
-        if hasattr(self, 'check_inputs'):
-            self.check_inputs(inputs)
-        setattr(self, '_inputs', inputs)
+        self._inputs = inputs
 
-    def _attach_outputs(self, *outputs):
-        self._outputs = tuple(weakref.ref(self._get_entity_data(o)) if o is not None else o
-                              for o in outputs)
-
-        if len(self._outputs) > self.output_limit:
-            raise ValueError("Outputs' size exceeds limitation")
-
-    def copy(self):
-        new_op = super(Operand, self).copy()
-        new_op.outputs = []
-
-        return new_op
+    def _set_outputs(self, outputs):
+        self._outputs = outputs

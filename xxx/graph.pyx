@@ -119,8 +119,13 @@ cdef class DirectedGraph:
 
     def iter_nodes(self, data=False):
         if data:
-            return iter(self._nodes.items())
-        return iter(self._nodes)
+            return self._nodes.items()
+        return self._nodes
+
+    # def iter_nodes(self, data=False):
+    #     if data:
+    #         return iter(self._nodes.items())
+    #     return iter(self._nodes)
 
     def iter_successors(self, n):
         try:
@@ -280,6 +285,10 @@ cdef class DirectedGraph:
                 graph.add_edge(succ, n)
         return graph
 
+    def execute(self):
+        pass
+
+
     # def serialize(self):
     #     cdef:
     #         set visited = set()
@@ -347,12 +356,8 @@ cdef class DirectedGraph:
         operand_style = '[shape=circle]'
 
         visited = set()
-        a = self.iter_nodes()
-        print(a)
-        b = self.iter_nodes(True)
-        print(b)
-        for node in self.iter_nodes(True):
-            print("node", node)
+        for node in self._nodes:
+            print("node-------", type(node), node)
             op = node.op
             if op.key in visited:
                 continue
@@ -571,22 +576,3 @@ class InvalidComposedNodeError(Exception):
 #                     stack.append(succ)
 #         if len(visited) != len(self):
 #             raise GraphContainsCycleError
-
-
-# class SerializableGraphNode(Serializable):
-#     _node = OneOfField('node', op='mars.operands.Operand',
-#                        chunk='mars.tensor.core.ChunkData', tensor='mars.tensor.core.TensorData')
-
-#     @classmethod
-#     def cls(cls, provider):
-#         if provider.type == ProviderType.protobuf:
-#             from .serialize.protos.graph_pb2 import GraphDef
-
-#             return GraphDef.NodeDef
-
-#         return super(SerializableGraphNode, cls).cls(provider)
-
-#     @property
-#     def node(self):
-#         return getattr(self, '_node', None)
-

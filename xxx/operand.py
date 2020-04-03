@@ -15,11 +15,12 @@
 # limitations under the License.
 
 import sys, os
-path2add = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, 'compat')))
+path2add = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(__file__))))
 
 if (not (path2add in sys.path)) :
     sys.path.append(path2add)
 
+from operators import op_dict
 import weakref
 from numpy import isscalar
 import time
@@ -29,8 +30,8 @@ import time
 
 class Data(object):
     # check data ?
-    def __init__(self, data):
-        self._data = data
+    def __init__(self):
+        self._data = None
 
     @property
     def data(self):
@@ -55,8 +56,8 @@ class Data(object):
     # def copy_from(self, obj):
     #     self.data = obj.data
 
-class Field:
-    pass
+# class Field:
+#     def __init__(self, )
 
 # operand state: waiting -> unscheduled -> ready -> running -> finished
 
@@ -71,8 +72,8 @@ class Operand:
         self._op_id = self.hash_op_id(op_name)
         self._op_name = op_name
         self._inputs = dict()
-        self._outputs = dict()
-    
+        self._outputs = None
+
     def hash_op_id(self, op_name):
         return str(hash(op_name)) + "." + str(int(time.time()))
 
@@ -101,3 +102,8 @@ class Operand:
 
     def _set_outputs(self, outputs):
         self._outputs = outputs
+
+    def execute(self):
+        op = op_dict[self._op_name]
+        self.outputs = op(**self.inputs)
+        return self.outputs

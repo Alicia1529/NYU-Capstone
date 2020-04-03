@@ -3,31 +3,30 @@ print("xxx/unittests/test_operand.py")
 
 import os
 import sys
-path1 = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+path = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
-path2 = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir, os.path.pardir)))
 
-if (not (path1 in sys.path)) :
-    sys.path.append(path1)
-if (not (path2 in sys.path)) :
-    sys.path.append(path2)
+if (not (path in sys.path)) :
+    sys.path.append(path)
 
 print(sys.path)
 print(os.path.dirname(__file__))
 print(os.path.pardir)
 from operand import Operand
 
-from Validation_Code.E_AllBesselSpherical1 import *
 
-print(bessel3(3,4))
+op_e1_bessel1 = Operand("e1.bessel1")
+op_e1_bessel1.inputs = {"n": 0, "z": 1.8 + 0.1j}
+op_e1_bessel1.execute()
+print(op_e1_bessel1.__dict__)
 
+op_e1_bessel2 = Operand("e1.bessel2")
+op_e1_bessel2.inputs = {"n": 0, "z": 1.8 + 0.1j}
+op_e1_bessel2.execute()
+print(op_e1_bessel2.__dict__)
 
-op1 = Operand("bessel")
-op1.inputs = {"n":3, "z": 4}
-op1.outputs = {"output1": bessel3(3, 4)}
+op_sum = Operand("+")
+op_sum.inputs = {"a": op_e1_bessel1.outputs, "b": op_e1_bessel2.outputs}
+op_sum.execute()
+print(op_sum.__dict__)
 
-print(op1.__dict__)
-
-a = bessel1(3, 4)
-b = bessel1(3, 4)
-c = bessel1(a, b)

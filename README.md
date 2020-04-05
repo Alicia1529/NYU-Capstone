@@ -11,6 +11,7 @@ to-do list:
 4. graph can work properly
 
 Completed:
+
 2020.4.2
 1. add basic operators (Alicia)
 2. program the basic operand logic and its execution (Alicia)
@@ -25,9 +26,9 @@ Current operand logic:
 operand:
 - id: str
 - name: str
-- inputs: list of <datachunk>
-- outputs: list <datachunk>
+- inputs: list of `DataChunk`
+- outputs: list of `DataChunk`
 
-datachunk:
+DataChunk:
 - id: str
 - data: dictionary if input, number if output

@@ -21,11 +21,13 @@ Completed:
 2. modified operand logic and did tests (Anqi)
 
 Current operand logic:
+
 operand:
-    - id: str
-    - name: str
-    - inputs: list of <datachunk>
-    - outputs: list <datachunk>
+- id: str
+- name: str
+- inputs: list of <datachunk>
+- outputs: list <datachunk>
+
 datachunk:
-    - id: str
-    - data: dictionary if input, number if output
+- id: str
+- data: dictionary if input, number if output

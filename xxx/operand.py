@@ -28,18 +28,24 @@ import time
 # Data state: (waiting ->) ready
 
 
-class Data(object):
+class DataChunk(object):
     # check data ?
     def __init__(self):
+        self._id = None
         self._data = None
+
+    @property
+    def key(self):
+        return self._id
 
     @property
     def data(self):
         return self._data
-
+    
     @data.setter
     def data(self, new_data):
         self._data = new_data
+        self._id = str(hash(time.time()))[:10]
 
     def isNumerical(self):
         return isscalar(self._data)
@@ -71,8 +77,8 @@ class Operand:
     def __init__(self, op_name):
         self._op_id = self.hash_op_id(op_name)
         self._op_name = op_name
-        self._inputs = dict()
-        self._outputs = None
+        self._inputs = list()
+        self._outputs = list()
 
     def hash_op_id(self, op_name):
         return str(hash(op_name)) + "." + str(int(time.time()))
@@ -98,12 +104,15 @@ class Operand:
         self._set_outputs(outputs)
 
     def _set_inputs(self, inputs):
-        self._inputs = inputs
+        self._inputs.append(inputs)
 
     def _set_outputs(self, outputs):
-        self._outputs = outputs
+        self._outputs.append(outputs)
 
     def execute(self):
         op = op_dict[self._op_name]
-        self.outputs = op(**self.inputs)
+        for input_chunk in self.inputs:
+            output_chunk = DataChunk()
+            output_chunk.data = op(**input_chunk.data)
+            self.outputs.append(output_chunk)
         return self.outputs

@@ -357,7 +357,7 @@ cdef class DirectedGraph:
 
         visited = set()
         for node in self._nodes:
-            print("node-------", type(node), node)
+            print(type(node).__name__, node)
             op = node.op
             if op.key in visited:
                 continue

@@ -1,2 +1,5 @@
 *Materials
-*Validation-Code/__pycache__
+**/build
+**/*.so
+**/__pycache__
+**/.DS_Store

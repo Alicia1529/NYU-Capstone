@@ -21,14 +21,18 @@ Completed:
 1. added more operators (Anqi)
 2. modified operand logic and did tests (Anqi)
 
+2020.4.6
+1. modify operand and graph logic + tests (Alicia)
+2. add task manager (Alicia)
+
 Current operand logic:
 
 operand:
 - id: str
 - name: str
-- inputs: list of `DataChunk`
-- outputs: list of `DataChunk`
+- inputs: dict of `DataChunk`
+- outputs: `DataChunk`
 
 DataChunk:
 - id: str
-- data: dictionary if input, number if output
+- data: None or scalar or some data structure

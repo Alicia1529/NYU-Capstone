@@ -361,23 +361,23 @@ cdef class DirectedGraph:
             op = node.op
             if op.key in visited:
                 continue
-            for input_chunk in (op.inputs or []):
+            for input_chunk in (op.inputs.values() or []):
                 if input_chunk.key not in visited:
-                    sio.write('"Chunk:%s" %s\n' % (input_chunk.key[:5], chunk_style))
+                    sio.write('"Chunk:%s" %s\n' % (input_chunk.key, chunk_style))
                     visited.add(input_chunk.key)
                 if op.key not in visited:
-                    sio.write('"%s:%s" %s\n' % (type(op).__name__, op.key[:5], operand_style))
+                    sio.write('"%s:%s" %s\n' % (type(op).__name__, op.key, operand_style))
                     visited.add(op.key)
-                sio.write('"Chunk:%s" -> "%s:%s"\n' % (input_chunk.key[:5], type(op).__name__, op.key[:5]))
+                sio.write('"Chunk:%s" -> "%s:%s"\n' % (input_chunk.key, type(op).__name__, op.key))
 
-            for output_chunk in (op.outputs or []):
-                if output_chunk.key not in visited:
-                    sio.write('"Chunk:%s" %s\n' % (output_chunk.key[:5], chunk_style))
-                    visited.add(output_chunk.key)
-                if op.key not in visited:
-                    sio.write('"%s:%s" %s\n' % (type(op).__name__, op.key[:5], operand_style))
-                    visited.add(op.key)
-                sio.write('"%s:%s" -> "Chunk:%s"\n' % (type(op).__name__, op.key[:5], output_chunk.key[:5]))
+            output_chunk = op.outputs
+            if output_chunk.key not in visited:
+                sio.write('"Chunk:%s" %s\n' % (output_chunk.key, chunk_style))
+                visited.add(output_chunk.key)
+            if op.key not in visited:
+                sio.write('"%s:%s" %s\n' % (type(op).__name__, op.key, operand_style))
+                visited.add(op.key)
+            sio.write('"%s:%s" -> "Chunk:%s"\n' % (type(op).__name__, op.key, output_chunk.key))
 
         sio.write('}')
         return sio.getvalue()
@@ -403,85 +403,73 @@ cdef class DirectedGraph:
 
     #     return graph
 
-    # def to_pb(self, pb_obj=None):
-    #     return self.serialize().to_pb(obj=pb_obj)
+    def _compose_graph(self, composes):
+        cdef:
+            list composed_nodes = []
 
-    # @classmethod
-    # def from_pb(cls, pb_obj):
-    #     try:
-    #         return cls.deserialize(SerialiableGraph.from_pb(pb_obj))
-    #     except KeyError as e:
-    #         logger.error('Failed to deserialize graph, graph_def: {0}'.format(pb_obj))
-    #         raise
+        from .tensor.expressions.fuse.core import TensorFuseChunk
+        composed_nodes = []
 
-    # def to_json(self, json_obj=None):
-    #     return self.serialize().to_json(obj=json_obj)
+        for c in composes:
+            head_node = c[0]
+            tail_node = c[-1]
+            fuse_op = TensorFuseChunk(dtype=tail_node.dtype, _key=tail_node.op.key)
+            fuse_chunk = fuse_op.new_chunk(head_node.inputs, tail_node.shape,
+                                           index=tail_node.index, _key=tail_node.key,
+                                           _composed=c)
+            self.add_node(fuse_chunk)
+            for node in self.iter_successors(tail_node):
+                self.add_edge(fuse_chunk, node)
+                # change inputs
+                node.inputs = [i if i is not tail_node else fuse_chunk for i in node.inputs]
+            for node in self.iter_predecessors(head_node):
+                self.add_edge(node, fuse_chunk)
+            # TODO:judge compose is independent?
+            for node in c:
+                self.remove_node(node)
+            composed_nodes.append(fuse_chunk)
 
-    # @classmethod
-    # def from_json(cls, json_obj):
-    #     return cls.deserialize(SerialiableGraph.from_json(json_obj))
+        return composed_nodes
 
-    # @classmethod
-    # def from_json(cls, json_obj):
-    #     return cls.deserialize(SerialiableGraph.from_json(json_obj))
+    def compose(self, list keys=None):
+        def _visit_predicate(n, visited):
+            print("visited", visited)
+            print("n", n.__dict__)
+            cond = any if getattr(n.op, '_loose_require', False) else all
+            print("cond", cond)
+            preds = self.predecessors(n)
+            print("preds", preds)
+            return not preds or cond(pred in visited for pred in preds)
 
-    # def _compose_graph(self, composes):
-    #     cdef:
-    #         list composed_nodes = []
+        composes = []
+        explored = set()
+        # for those chunk in result sets, we should not do any fuse
+        keys_set = set(keys or [])
+        idx = 0
 
-    #     from .tensor.expressions.fuse.core import TensorFuseChunk
-    #     composed_nodes = []
-
-    #     for c in composes:
-    #         head_node = c[0]
-    #         tail_node = c[-1]
-    #         fuse_op = TensorFuseChunk(dtype=tail_node.dtype, _key=tail_node.op.key)
-    #         fuse_chunk = fuse_op.new_chunk(head_node.inputs, tail_node.shape,
-    #                                        index=tail_node.index, _key=tail_node.key,
-    #                                        _composed=c)
-    #         self.add_node(fuse_chunk)
-    #         for node in self.iter_successors(tail_node):
-    #             self.add_edge(fuse_chunk, node)
-    #             # change inputs
-    #             node.inputs = [i if i is not tail_node else fuse_chunk for i in node.inputs]
-    #         for node in self.iter_predecessors(head_node):
-    #             self.add_edge(node, fuse_chunk)
-    #         # TODO:judge compose is independent?
-    #         for node in c:
-    #             self.remove_node(node)
-    #         composed_nodes.append(fuse_chunk)
-
-    #     return composed_nodes
-
-    # def compose(self, list keys=None):
-    #     def _visit_predicate(n, visited):
-    #         cond = any if getattr(n.op, '_loose_require', False) else all
-    #         preds = self.predecessors(n)
-    #         return not preds or cond(pred in visited for pred in preds)
-
-    #     composes = []
-    #     explored = set()
-    #     # for those chunk in result sets, we should not do any fuse
-    #     keys_set = set(keys or [])
-
-    #     for v in self.bfs(visit_predicate=_visit_predicate):
-    #         if v in explored or v.key in keys_set:
-    #             continue
-    #         if self.count_successors(v) != 1:
-    #             continue
-    #         selected = [v]
-    #         # add successors
-    #         cur_node = self.successors(v)[0]
-    #         while self.count_predecessors(cur_node) == 1:
-    #             selected.append(cur_node)
-    #             if self.count_successors(cur_node) != 1:
-    #                 break
-    #             else:
-    #                 cur_node = self.successors(cur_node)[0]
-    #         if len(selected) > 1:
-    #             explored.update(selected)
-    #             composes.append(list(selected))
-    #     return self._compose_graph(composes)
+        for v in self.bfs(visit_predicate=_visit_predicate):
+            print(idx, ": v in bfs:", v.__dict__)
+            idx += 1
+            if v in explored or v.key in keys_set:
+                continue
+            if self.count_successors(v) != 1:
+                continue
+            selected = [v]
+            print("selected", selected[0].__dict__)
+            # add successors
+            cur_node = self.successors(v)[0]
+            print("cur_node", cur_node.__dict__)
+            while self.count_predecessors(cur_node) == 1:
+                selected.append(cur_node)
+                if self.count_successors(cur_node) != 1:
+                    break
+                else:
+                    cur_node = self.successors(cur_node)[0]
+            if len(selected) > 1:
+                explored.update(selected)
+                composes.append(list(selected))
+        print("composes", composes)
+        return self._compose_graph(composes)
 
     # def _decompose_node(self, node):
     #     def get_node(n):

@@ -24,15 +24,18 @@ from operators import op_dict
 import weakref
 from numpy import isscalar
 import time
+from copy import deepcopy
 
 # Data state: (waiting ->) ready
 
 
 class DataChunk(object):
     # check data ?
-    def __init__(self):
+    def __init__(self, data):
         self._id = None
         self._data = None
+        if data is not None:
+            self._set_data(data)
 
     @property
     def key(self):
@@ -44,8 +47,11 @@ class DataChunk(object):
     
     @data.setter
     def data(self, new_data):
+        self._set_data(new_data)
+
+    def _set_data(self, new_data):
         self._data = new_data
-        self._id = str(hash(time.time()))[:10]
+        self._id = str(hash(time.time()))
 
     def isNumerical(self):
         return isscalar(self._data)
@@ -77,15 +83,19 @@ class Operand:
     def __init__(self, op_name):
         self._op_id = self.hash_op_id(op_name)
         self._op_name = op_name
-        self._inputs = list()
-        self._outputs = list()
+        self._inputs = dict()
+        self._outputs = DataChunk(None)
 
     def hash_op_id(self, op_name):
-        return str(hash(op_name)) + "." + str(int(time.time()))
+        return str(hash(op_name))[:10] + "." + str(int(time.time()))
 
     @property
     def key(self):
         return self._op_id
+
+    @property
+    def op_name(self):
+        return self._op_name
 
     @property
     def inputs(self):
@@ -104,15 +114,20 @@ class Operand:
         self._set_outputs(outputs)
 
     def _set_inputs(self, inputs):
-        self._inputs.append(inputs)
+        self._inputs = inputs
 
     def _set_outputs(self, outputs):
-        self._outputs.append(outputs)
+        self._outputs = outputs
+    
+    def _get_input_data(self):
+        output = deepcopy(self.inputs)
+        for key in output:
+            output[key] = output[key].data
+        return output
 
     def execute(self):
         op = op_dict[self._op_name]
-        for input_chunk in self.inputs:
-            output_chunk = DataChunk()
-            output_chunk.data = op(**input_chunk.data)
-            self.outputs.append(output_chunk)
+        output_chunk = DataChunk(None)
+        output_chunk.data = op(**self._get_input_data())
+        self.outputs = output_chunk
         return self.outputs

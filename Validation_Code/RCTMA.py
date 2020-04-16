@@ -8,7 +8,6 @@
 
 import time
 import numpy as np
-from copy import deepcopy
 
 
 def rctma(num):
@@ -105,7 +104,6 @@ def rctma(num):
         for i in range(1, f):
             Trans2 = np.zeros((vscatterer[(i)-1].shape[0], vscatterer[(f)-1].shape[0]))
             for j in range(1, f):
-                # print("i loop", "i - 1", i - 1, "j - 1", j - 1, "f - 1",f - 1)
                 Trans2 += tMatij_n[(i)-1][(j)-1] @ hij[(j)-1][(f)-1]
             Trans1 += hij[(f)-1][(i)-1] @ Trans2
         
@@ -163,7 +161,6 @@ def rctma(num):
         for k in range(1, f):
             Trans4 = np.zeros((vscatterer[(k)-1].shape[0], vscatterer[(f)-1].shape[0]))
             for j in range(1, f):
-                # print("tMatij_n[k-1][j-1]", tMatij_n[k-1][j-1].shape, )
                 Trans4 += tMatij_n[k-1][j-1] @ hij[j-1][f-1]
             tMatij_np1[k-1][f-1] = Trans4 @ tMatij_np1[f-1][f-1]
 
@@ -172,8 +169,9 @@ def rctma(num):
         for i in range(1, f+1):
             for j in range(1, f+1):
                 tMatij_n[i-1][j-1] = tMatij_np1[i-1][j-1]
+        print()
 
 time1 = time.time()
-rctma(40)
+rctma(4)
 time2 = time.time()
 print("time:", time2 - time1)

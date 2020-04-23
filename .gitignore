@@ -3,3 +3,7 @@
 **/*.so
 **/__pycache__
 **/.DS_Store
+
+.vscode
+External_hij/.idea
+External_hij/cmake_build_debug

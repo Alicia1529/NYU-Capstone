@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.12)
-project(source_V3_0_0)
+project(external_hij)
 
 set(CMAKE_CXX_STANDARD 14)
 
 include_directories(source_MATH1)
 
-add_executable(source_V3_0_0
+add_executable(external_hij
         source_MATH1/AssociatedLegendreFunction.cpp
         source_MATH1/AssociatedLegendreFunction.h
         source_MATH1/BesselSpherical.cpp

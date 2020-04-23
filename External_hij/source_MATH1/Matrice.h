@@ -140,8 +140,8 @@ public:
     size_t g_lig () {return lig;}
     size_t g_col () {return col;}
     size_t g_dim () {return dim;}
-    T * g_pm() {
-        pm  ;
+    T* g_pm() {
+        return pm ;
     }
 
 

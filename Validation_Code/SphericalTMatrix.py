@@ -6,11 +6,12 @@ import E_AllBesselSpherical1 as e1
 import E_AllBesselSpherical2 as e2
 
 # nmax, wavelength, nmat, nincl, radius
-def SphericalTMatrix(nn, lbd, nmat, cindex, xvalue):
+def SphericalTMatrix(nn, lbd, nmat, xvalue, cindex_re, cindex_im):
 	# Affectation
 	# ===========
 	nmax = nn
 	dimtn  = 2 * nmax * (nmax + 2)
+	cindex = cindex_re + cindex_im * 1.j
 
 	# Size parameters
 	# ===============
@@ -39,7 +40,18 @@ def SphericalTMatrix(nn, lbd, nmat, cindex, xvalue):
 			indice += 1
 	return tmatrice
 
-if __name__ == "__main__":
+
+def VScatterer(nn, lbd, nmat, configuration):
+	size = configuration.shape[0]
+	tmp = []
+	dimt = 2 * nn * (nn + 2)
+	for i in range(size):
+		args = list(configuration[i][3:])
+		tmp.append(np.diag(SphericalTMatrix(nn, lbd, nmat, *args)))
+	return np.array(tmp)
+
+
+def validation():
 	print('''
 nmax : 
 25
@@ -111,3 +123,22 @@ dimtn   :  1350
 			.format(indice, n, f2.real, f2.imag)
 		)
 		indice += 1
+						  
+if __name__ == "__main__":
+	import time
+	nmax = 40
+	dimtn  = 2 * nmax * (nmax + 2)
+	# configuration = np.array([[0.0, 0.0, 0.0, 1.0 , 2.516, 0.12],
+	# 					 	 [0.0, 0.0, 6.4, 1.0, 1.625, 0.015]])
+	num = 40
+	configuration = np.array([[0.0, 0.0, 0.0, 1.0 , 2.516, 0.12]*num]).reshape(num, 6)
+
+	lbd = 0.555
+	nmat = 1.6
+	time_start = time.time()
+	vscatterer = VScatterer(nmax, lbd, nmat, configuration)
+	time_end = time.time()
+	print("Total time:", time_end - time_start)
+	
+	# print(vscatterer)
+	# print(vscatterer.shape)

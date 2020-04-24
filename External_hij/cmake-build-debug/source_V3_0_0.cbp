@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="source_V3_0_0"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="source_V3_0_0">
+				<Option output="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/cmake-build-debug/source_V3_0_0" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 source_V3_0_0"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="source_V3_0_0/fast">
+				<Option output="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/cmake-build-debug/source_V3_0_0" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/11.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 source_V3_0_0/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Alicia/Desktop/2020Spring/Capstone/H\ Matrices\ C++/source_V3/source_V3.0.0/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/main.cpp">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/AssociatedLegendreFunction.cpp">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/AssociatedLegendreFunction.h">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/BesselSpherical.cpp">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/BesselSpherical.h">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/Liste.cpp">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/Liste.h">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/Math1.cpp">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/Math1.h">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/Matrice.cpp">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/Matrice.h">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/ScalarTranslationalMatrix.cpp">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/ScalarTranslationalMatrix.h">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/Tableau.h">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/TableauX.cpp">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/TableauX.h">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/VectorialTranslationalMatrix.cpp">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/source_MATH1/VectorialTranslationalMatrix.h">
+			<Option target="source_V3_0_0"/>
+		</Unit>
+		<Unit filename="/Users/Alicia/Desktop/2020Spring/Capstone/H Matrices C++/source_V3/source_V3.0.0/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

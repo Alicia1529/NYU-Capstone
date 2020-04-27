@@ -1,5 +1,6 @@
 *Materials
 **/build
+**/*.o
 **/*.so
 **/__pycache__
 **/.DS_Store
@@ -7,3 +8,5 @@
 .vscode
 External_hij/.idea
 External_hij/cmake_build_debug
+External_hij/CMakeFiles
+External_hij/CMakeCache.txt

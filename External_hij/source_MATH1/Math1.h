@@ -223,7 +223,9 @@ namespace  math1
     class     BaseClass   ;
     void  testBaseClass() ;
     
-    
+    void transformCartesianToSphericalCoordinate
+            (double, double, double, double&, double&, double&);
+
     template <class T> void saveObjectToFile (string, T&, const string) ;
 
 } ;

@@ -126,19 +126,33 @@ dimtn   :  1350
 						  
 if __name__ == "__main__":
 	import time
-	nmax = 40
+	nmax = 3
 	dimtn  = 2 * nmax * (nmax + 2)
-	# configuration = np.array([[0.0, 0.0, 0.0, 1.0 , 2.516, 0.12],
-	# 					 	 [0.0, 0.0, 6.4, 1.0, 1.625, 0.015]])
-	num = 40
-	configuration = np.array([[0.0, 0.0, 0.0, 1.0 , 2.516, 0.12]*num]).reshape(num, 6)
 
-	lbd = 0.555
-	nmat = 1.6
+	num = 9
+	configuration = np.array([[0.000000000e+00,    0.000000000e+00,    0.000000000e+00, 1.000000000e+00, 2.516,              0.120],
+							  [0.000000000e+00,    0.000000000e+00,    6.400000000e+00, 1.000000000e+00, 1.625,              0.015],
+							  [0.000000000e+00,    0.000000000e+00,   -6.400000000e+00, 1.000000000e+00, 1.625,              0.015],
+							  [6.400000000e+00,    0.000000000e+00,    0.000000000e+00, 1.000000000e+00, 1.625,              0.015],
+							  [-6.400000000e+00,    0.000000000e+00,    0.000000000e+00, 1.000000000e+00, 1.625,              0.015],
+							  [-6.400000000e+00,    0.000000000e+00,    6.400000000e+00, 1.000000000e+00, 1.300,              0.080],
+							  [-6.400000000e+00,    0.000000000e+00,   -6.400000000e+00, 1.000000000e+00, 1.300,              0.080],
+							  [6.400000000e+00,    0.000000000e+00,    6.400000000e+00, 1.000000000e+00, 1.300,              0.080],
+							  [6.400000000e+00,    0.000000000e+00,   -6.400000000e+00, 1.000000000e+00, 1.300,              0.080]])
+
+	lbd = 3.14159265
+	nmat = 1.0 
 	time_start = time.time()
-	vscatterer = VScatterer(nmax, lbd, nmat, configuration)
-	time_end = time.time()
-	print("Total time:", time_end - time_start)
-	
-	# print(vscatterer)
-	# print(vscatterer.shape)
+
+	# t1 = SphericalTMatrix(nmax, lbd, nmat, *list(configuration[0, 3:]))
+	# print(t1.shape)
+	# print(t1)
+
+	# vscatterer = VScatterer(nmax, lbd, nmat, configuration)
+	# time_end = time.time()
+	# print("Total time:", time_end - time_start)
+	# print(vscatterer[0])
+	# # for i in range(9):
+	# # 	print("\nThe " + str(i) + "th T matrix is\n")
+	# # 	print(vscatterer[i])
+	# # # print(vscatterer.shape)

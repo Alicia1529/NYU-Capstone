@@ -19,6 +19,8 @@ idx = 0
 for line in content:
     row = idx // dimt
     col = idx % dimt
+    # col = idx // dimt
+    # row = idx % dimt
     each = eval(line.split(":")[1].strip())
     re = each[0]
     im = each[1]

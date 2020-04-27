@@ -94,7 +94,33 @@
 
 
 
+void math1::transformCartesianToSphericalCoordinate
+        (double x, double y, double z, double& r, double& theta, double& phi) {
+    double pi = 4.0*atan(1.0);
 
+    r = sqrt(x*x+y*y+z*z) ;
+    if (r==0.0) {
+        theta = 0.0 ;
+        phi = 0.0 ;
+        return ;
+    }
+    if (x==0.0 && y==0.0) {
+        if (z>=0.0) theta=0.0 ;
+        if (z< 0.0) theta=pi ;
+        phi = 0.0 ;
+        return ;
+    }
+    theta = acos(z /r ) ;
+    if (x==0.0) {
+        if (y>=0.0)
+            phi = pi/2.0 ;
+        if (y<0.0)
+            phi = 3.0*pi/2.0 ;
+    }
+    else {
+        phi = atan2(y,x) ;
+    }
+}
 
 // =+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
 // =+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=

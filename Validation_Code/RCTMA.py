@@ -7,9 +7,10 @@ if (not (path2add in sys.path)) :
 
 import time
 import numpy as np
+import pickle
 
 import SphericalTMatrix as sm
-
+from parameter_parser import parameter_parser
 
 dtype = 'complex128'
 
@@ -26,7 +27,8 @@ def rctma(num, nmax, lbd, nmat, configuration):
     # vscatterer = [np.ones((dimt, dimt)) for n in range(nbp)]
 
     # hij[findice(j,f)]: nj*nf
-    hij = np.random.rand(nbp, nbp, dimt, dimt).astype(dtype) + 1.j
+    hij_file = open("Validation_Data/H.npy", "rb")
+    hij = pickle.load(hij_file)
 
     tMatij_n = np.empty((nbp, nbp, dimt, dimt), dtype=dtype)
     # [[0 for i in range(nbp)] for j in range(nbp)]
@@ -40,8 +42,11 @@ def rctma(num, nmax, lbd, nmat, configuration):
     # T [(1,1) 2]
     # Trans1 = vscatterer[(2)-1] * hij[findice(2,1)].g_PointerToMatrix() //2*2 x 2*1 ->2*1
     # Trans2 = hij[findice(1,2)] * Trans1 // 1*2 x 2*1 = 1*1
-    # Trans1 = vscatterer[(1)-1] * Trans2 // n1*n1 
-    Trans1 = vscatterer[(1)-1] @ hij[(1)-1, (2)-1] @ vscatterer[(2)-1] @ hij[(2)-1, (1)-1]
+    # Trans1 = vscatterer[(1)-1] * Trans2 // n1*n1
+    Trans1 = vscatterer[(2)-1] @ hij[(2)-1, (1)-1]
+    Trans2 = hij[(1)-1, (2)-1] @ Trans1
+    Trans1 = vscatterer[(1)-1] @ Trans2
+    # Trans1 = vscatterer[(1)-1] @ hij[(1)-1, (2)-1] @ vscatterer[(2)-1] @ hij[(2)-1, (1)-1] # simplified version
     # Trans2.s_MatUmoinsB(Trans1)
     # Trans2.selfInvertMatrix(info) // n1*n1
     Trans2 = np.linalg.inv(np.identity(dimt) - Trans1)
@@ -171,23 +176,48 @@ def rctma(num, nmax, lbd, nmat, configuration):
 
         # Preparation of the new recurrence
         # ===========================================================================
-        for i in range(1, f+1):
-            for j in range(1, f+1):
-                tMatij_n[i-1, j-1] = tMatij_np1[i-1, j-1]
+        tMatij_n = np.copy(tMatij_np1)
+        # for i in range(1, f+1):
+        #     for j in range(1, f+1):
+        #         tMatij_n[i-1, j-1] = tMatij_np1[i-1, j-1]
         # print()
+    return tMatij_n
 
 if __name__ == "__main__":
-    # configuration = np.array([[0.0, 0.0, 0.0, 1.0 , 2.516, 0.12],
-    #                           [0.0, 0.0, 6.4, 1.0, 1.625, 0.015]])
+    import pickle
     
-    num = 20
-    nmax = 20
-    configuration = np.array([[0.0, 0.0, 0.0, 1.0 , 2.516, 0.12]*num]).reshape(num, 6)
-    lbd = 0.555
-    nmat = 1.6 
+    num = 9
+    nmax = 3
+    # lbd = 3.14159265
+    # nmat = 1.0 
+    # configuration = np.array([  [0.000000000e+00,    0.000000000e+00,    0.000000000e+00, 1.000000000e+00, 2.516,              0.120],
+    #                             [0.000000000e+00,    0.000000000e+00,    6.400000000e+00, 1.000000000e+00, 1.625,              0.015],
+    #                             [0.000000000e+00,    0.000000000e+00,   -6.400000000e+00, 1.000000000e+00, 1.625,              0.015],
+    #                             [6.400000000e+00,    0.000000000e+00,    0.000000000e+00, 1.000000000e+00, 1.625,              0.015],
+    #                             [-6.400000000e+00,    0.000000000e+00,    0.000000000e+00, 1.000000000e+00, 1.625,              0.015],
+    #                             [-6.400000000e+00,    0.000000000e+00,    6.400000000e+00, 1.000000000e+00, 1.300,              0.080],
+    #                             [-6.400000000e+00,    0.000000000e+00,   -6.400000000e+00, 1.000000000e+00, 1.300,              0.080],
+    #                             [6.400000000e+00,    0.000000000e+00,    6.400000000e+00, 1.000000000e+00, 1.300,              0.080],
+    #                             [6.400000000e+00,    0.000000000e+00,   -6.400000000e+00, 1.000000000e+00, 1.300,              0.080]])
+
 
     time1 = time.time()
-    # rctma(num, nmax, lbd, nmat, configuration)
-    rctma(num, nmax, lbd, nmat, configuration)
+    lbd, n0, particles = parameter_parser(nmax)
+    # print(lbd, n0, particles)
+    tMatij_n = rctma(num, nmax, lbd, n0, particles)
+    # tMatij_n = rctma(num, nmax, lbd, nmat, configuration)
     time2 = time.time()
     print("time:", time2 - time1)
+    # row = 0
+    # col = 0
+
+    # matrix = tMatij_n[row, col].transpose()
+    # np.set_printoptions(suppress=False)
+    # for i in range(30):
+    #     for j in range(30):
+    #         print(i + 1, j + 1, "real: {:>19.9e}, imag:{:>19.9e}".format(matrix[j, i].real,
+    #                                                                      matrix[j, i].imag))
+    # fp = open("../Validation_Data/computed_T.npy", "wb")
+    # pickle.dump(tMatij_n, fp)
+    # fp.close()
+    

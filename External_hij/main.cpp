@@ -24,7 +24,7 @@ int main(int argc, const char * argv[]) {
     clock_t start, end;
     start = clock();
 
-    ifstream infile("input_data/hij_input.txt");
+    ifstream infile("External_hij/input_data/hij_input.txt");
     string line;
     getline(infile, line);
     int nmax = stoi(line);
@@ -34,7 +34,6 @@ int main(int argc, const char * argv[]) {
     double lbd = stod(line);
     getline(infile, line);
     double n0 = stod(line);
-//    printf("%d %d\n", nmax, nbp);
 
     int i, j;
     double tmp;
@@ -85,7 +84,7 @@ int main(int argc, const char * argv[]) {
 //    int cc = 2;
     for (int rr = 1; rr <= nbp; rr++) {
         for (int cc = 1; cc <= nbp; cc++) {
-            string dir = "data/H(" + to_string(rr) + "," + to_string(cc) + ")_.txt";
+            string dir = "External_hij/data/H(" + to_string(rr) + "," + to_string(cc) + ")_.txt";
             ofstream outfile(dir, ios::out);
 
             p = 2.0 * dij(rr, cc) * pi * n0 / lbd; // kdij
@@ -108,17 +107,47 @@ int main(int argc, const char * argv[]) {
 
             for (i = 0; i < row * col; i++) {
                 cdouble each = ret.g_pm()[i];
-                outfile << scientific << setprecision(9) << i+1 << "\t"
+                outfile << scientific << setprecision(100) << i+1 << "\t"
                 << each.real() << "\t" << each.imag() << endl;
             }
             outfile.close();
         }
     }
 
+    for (int rr = 1; rr <= nbp; rr++) {
+        for (int cc = 1; cc <= nbp; cc++) {
+            string dir = "External_hij/data/J(" + to_string(rr) + "," + to_string(cc) + ")_.txt";
+            ofstream outfile(dir, ios::out);
 
+            p = 2.0 * dij(rr, cc) * pi * n0 / lbd; // kdij
+            cdouble z = cdouble (p,0.0) ;
+            t = thetaij(rr, cc);
+            p = phiij(rr, cc)  ; // phi
+            TranslationTheoremAlgorithm mode1 = brian3Y ;
+            outfile << "kd \t theta \t phi" << endl;
+            outfile << p << "\t" << t << "\t" << z << "\t" << endl;
 
-     end = clock();
-     cout << double(end-start)/CLOCKS_PER_SEC << endl;
+            outfile << "----------------------------" << endl;
+            outfile << endl;
+
+            cMatrice ret;
+            VectorialTranslationalMatrix hij;
+
+            hij.g_JMatrix (ret, nmax, nmax, z,t,p, mode1) ;
+            size_t row = ret.g_lig();
+            size_t col = ret.g_col();
+
+            for (i = 0; i < row * col; i++) {
+                cdouble each = ret.g_pm()[i];
+                outfile << scientific << setprecision(100) << i+1 << "\t"
+                        << each.real() << "\t" << each.imag() << endl;
+            }
+            outfile.close();
+        }
+    }
+
+    end = clock();
+    // cout << double(end-start)/CLOCKS_PER_SEC << endl;
 
     return 0;
 }

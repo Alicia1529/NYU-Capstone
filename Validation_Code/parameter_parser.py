@@ -49,19 +49,19 @@ def parameter_parser(nmax):
         fw.close()
     f.close()
 
-    if not os.path.exists(HIJ_PATH+HIJ_FILE):
-        f = open(HIJ_PATH+HIJ_FILE,"w+")
-        f.write("%d\n" % nmax)
-        f.write("%d\n" % particles.shape[0])
-        f.write("{:.10}\n".format(lbd))
-        f.write("{:.10}\n".format(n0))
-        for i in range(particles.shape[0]):
-            f.write("{:.10} {:.10} {:.10}".format(particles[i][0], particles[i][1], particles[i][2]))
-            f.write("\n")
-    f.close()
+    # if not os.path.exists(HIJ_PATH+HIJ_FILE):
+    f = open(HIJ_PATH+HIJ_FILE,"w+")
+    f.write("%d\n" % nmax)
+    f.write("%d\n" % particles.shape[0])
+    f.write("{:.10}\n".format(lbd))
+    f.write("{:.10}\n".format(n0))
+    for i in range(particles.shape[0]):
+        f.write("{:.10} {:.10} {:.10}".format(particles[i][0], particles[i][1], particles[i][2]))
+        f.write("\n")
+    # f.close()
 
-    print("input: lbd, n0, particles\n")
-    print(lbd, n0)
+    print("input: nmax {}, lbd {}, n0 {}\n".format(nmax, lbd, n0))
+    print("particles: x, y, z, a, ren, imn")
     print(particles)
     return lbd, n0, particles
 

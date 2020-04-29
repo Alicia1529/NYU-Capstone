@@ -10,7 +10,7 @@ import re
 import os
 
 PATH = "Validation_Data/"
-IN_FILE = "InputDataC1.txt"
+IN_FILE = "InputDataC2.txt"
 OUT_FILE = IN_FILE.split('.')[0] + '.npy'
 
 HIJ_PATH = "External_hij/input_data/"
@@ -32,22 +32,22 @@ def parameter_parser(nmax):
     lbd = float(lbd)
     n0 = float(n0)
 
-    if os.path.exists(PATH+OUT_FILE):
-        fr = open(PATH+OUT_FILE, "rb")
-        particles = pickle.load(fr)
-    else:
-        particles = []
-        for line in content[4:]:
-            params = re.findall(r"[-]?\d+[.]?\d+[Ee]?[+-]?[\d+]?", line)
-            params = [*params[3:], params[2], *params[0:2]]
-            params = convert(params)
-            particles.append(params)
-        
-        particles = np.array(particles)
-        fw = open(PATH+OUT_FILE, 'wb')
-        pickle.dump(particles, fw)
-        fw.close()
-    f.close()
+    # if os.path.exists(PATH+OUT_FILE):
+    #     fr = open(PATH+OUT_FILE, "rb")
+    #     particles = pickle.load(fr)
+    # else:
+    particles = []
+    for line in content[4:]:
+        params = re.findall(r"[-]?\d+[.]?\d*[Ee]?[+-]?[\d+]?", line)
+        params = [*params[3:6], params[2], *params[0:2]]
+        params = convert(params)
+        particles.append(params)
+    
+    particles = np.array(particles)
+    # fw = open(PATH+OUT_FILE, 'wb')
+    # pickle.dump(particles, fw)
+    # fw.close()
+    # f.close()
 
     # if not os.path.exists(HIJ_PATH+HIJ_FILE):
     f = open(HIJ_PATH+HIJ_FILE,"w+")
@@ -67,7 +67,7 @@ def parameter_parser(nmax):
 
 
 if __name__ == "__main__":
-    lbd, n0, particles = parameter_parser(3)
+    lbd, n0, particles = parameter_parser(7)
     # hij_input_parser(particles, lbd, n0, 3, particles.shape[0])
 
 

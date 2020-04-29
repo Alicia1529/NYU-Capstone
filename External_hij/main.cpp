@@ -107,7 +107,7 @@ int main(int argc, const char * argv[]) {
 
             for (i = 0; i < row * col; i++) {
                 cdouble each = ret.g_pm()[i];
-                outfile << scientific << setprecision(100) << i+1 << "\t"
+                outfile << scientific << setprecision(10) << i+1 << "\t"
                 << each.real() << "\t" << each.imag() << endl;
             }
             outfile.close();
@@ -139,7 +139,7 @@ int main(int argc, const char * argv[]) {
 
             for (i = 0; i < row * col; i++) {
                 cdouble each = ret.g_pm()[i];
-                outfile << scientific << setprecision(100) << i+1 << "\t"
+                outfile << scientific << setprecision(10) << i+1 << "\t"
                         << each.real() << "\t" << each.imag() << endl;
             }
             outfile.close();

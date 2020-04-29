@@ -151,10 +151,12 @@ if __name__ == "__main__":
     import pickle
     
     num = 9
-    nmax = 3
+    nmax = 7
+    dimt = 2 * nmax * (nmax + 2)
+    IN_FILE = "InputDataC1.txt"
 
     time1 = time.time()
-    lbd, n0, particles = parameter_parser(nmax)
+    lbd, n0, particles = parameter_parser(nmax, IN_FILE)
     tMatij_n = rctma(num, nmax, lbd, n0, particles)
     time2 = time.time()
     print("time:", time2 - time1)
@@ -164,8 +166,8 @@ if __name__ == "__main__":
 
     matrix = tMatij_n[row, col].transpose()
     np.set_printoptions(suppress=False)
-    for i in range(30):
-        for j in range(30):
+    for i in range(dimt):
+        for j in range(dimt):
             print(i + 1, j + 1, "real: {:>19.9e}, imag:{:>19.9e}".format(matrix[j, i].real,
                                                                          matrix[j, i].imag))
     # fp = open("../Validation_Data/computed_T.npy", "wb")

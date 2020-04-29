@@ -10,37 +10,22 @@ import re
 import os
 
 PATH = "Validation_Data/"
-IN_FILE = "InputDataC2.txt"
-OUT_FILE = IN_FILE.split('.')[0] + '.npy'
 
 HIJ_PATH = "External_hij/input_data/"
 HIJ_FILE = "hij_input.txt"
 
-# NMAX = 3 
-NBP = 9
-
-def convert(l):
-    nl = []
-    for s in l:
-        nl.append(float(s))
-    return nl
-
-def parameter_parser(nmax):
+def parameter_parser(nmax, IN_FILE):
+    # OUT_FILE = IN_FILE.split('.')[0] + '.npy'
+    
     f = open(PATH+IN_FILE, "r")
     content = f.read().strip().split("\n")
-    lbd, n0 = re.findall(r"\d+[.]?\d+", content[1])
-    lbd = float(lbd)
-    n0 = float(n0)
+    lbd = eval(content[0].strip())
+    n0 =  eval(content[1].strip())
 
-    # if os.path.exists(PATH+OUT_FILE):
-    #     fr = open(PATH+OUT_FILE, "rb")
-    #     particles = pickle.load(fr)
-    # else:
     particles = []
-    for line in content[4:]:
-        params = re.findall(r"[-]?\d+[.]?\d*[Ee]?[+-]?[\d+]?", line)
-        params = [*params[3:6], params[2], *params[0:2]]
-        params = convert(params)
+    for line in content[2:]:
+        line = line.strip().strip("{|};").split(",")[1:]
+        params = list(map(lambda x: eval(x.strip()), line))
         particles.append(params)
     
     particles = np.array(particles)
@@ -67,7 +52,9 @@ def parameter_parser(nmax):
 
 
 if __name__ == "__main__":
-    lbd, n0, particles = parameter_parser(7)
+    nmax = 7
+    IN_FILE = "InputDataC2.txt"
+    lbd, n0, particles = parameter_parser(nmax, IN_FILE)
     # hij_input_parser(particles, lbd, n0, 3, particles.shape[0])
 
 

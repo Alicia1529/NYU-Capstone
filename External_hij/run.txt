@@ -1,6 +1,0 @@
-install cmake
-
-then run 
-`cmake External_hij/CMakeLists.txt`
-`(cd External_hij && make)`
-`./External_hij/external_hij`

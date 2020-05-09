@@ -7,8 +7,8 @@
 **/*.pyc
 
 .vscode
-External_hij/.idea
-External_hij/cmake_build_debug
-External_hij/CMakeFiles
-External_hij/CMakeCache.txt
-External_hij/data/*
+external/.idea
+external/cmake_build_debug
+external/CMakeFiles
+external/CMakeCache.txt
+external/data/*
